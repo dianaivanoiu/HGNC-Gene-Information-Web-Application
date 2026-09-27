@@ -152,7 +152,7 @@ LOGGING_CONFIG = {
 }
 
 # Setup data directory path
-#DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
 # Setup data file
-#DATA_FILE = os.path.join(DATA_DIR, f"gnomad_constraint_1.csv")
+DATA_FILE = os.path.join(DATA_DIR, f"lightweight_dataset.json")

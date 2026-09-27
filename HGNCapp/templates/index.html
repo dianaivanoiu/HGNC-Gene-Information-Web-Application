@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gnomad constraint list</title>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body style="background: rgb(252, 250, 250);">
+    <div class="container">
+        <h1 style="text-align:center">gnomAD constraint selection</h1>
+        <form action="{{ url_for('search') }}" method="post">
+
+            <label for="gene">Gene:</label>
+            <input type="text" name="gene" placeholder="" required>
+            <br><br>
+
+
+
+            <button type="submit" class="btn btn-primary">Get constraint data</button>
+        </form>
+        <br>
+        {{ output_text_1 }}
+        <br>
+        {{ output_text_2 }}
+    </div>
+</body>
+</html>
