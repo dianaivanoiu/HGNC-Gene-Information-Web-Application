@@ -120,10 +120,15 @@ def create_app() -> Flask:
 
             logger.info(f"Gene found: {gene}")
 
-            output_text_1: str = f"Gene = {selection['symbol']}"
+            output_text_1: str = f"Found gene:"
             output_text_2: str = (
-                f"Name = {selection['name']}, "
-                f"Alias = {selection['alias_symbol']}"
+                f"HGNC ID = {selection['hgnc_id']}, "
+                f"Gene symbol = {selection['symbol']}, "
+                f"Gene name = {selection['name']}, "
+                f"Previous symbol = {selection['prev_symbol']}, "
+                f"Previous name = {selection['prev_name']}, "
+                f"Alias = {selection['alias_symbol']}, "
+                f"MANE Select transcript = {selection['mane_select']}, "
             )
 
             return render_template(
