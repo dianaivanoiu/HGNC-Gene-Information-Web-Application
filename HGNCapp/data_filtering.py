@@ -1,6 +1,7 @@
 import sys
 import logging
 import csv
+import json
 from pathlib import Path
 from typing import List, Dict, Optional
 from logger import setup_logging
@@ -87,6 +88,17 @@ if __name__ == '__main__':
     setup_logging()
     logger.debug(f"Entry function")
 
-    read_file(Path("/Users/diana/PycharmProjects/HGNC-Gene-Information-Web-Application/data/hgnc_test_set.txt"))
+    dataset = Path("/Users/diana/PycharmProjects/HGNC-Gene-Information-Web-Application/data/hgnc_test_set.txt")
 
+    lightweight_dataset = read_file(dataset)
+
+    output_path = dataset.parent / "lightweight_dataset.json"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(output_path, "w", encoding="utf-8") as file:
+        json.dump(
+            lightweight_dataset,
+            file,
+            indent=2,
+            ensure_ascii=False,
+        )
     sys.exit(0)

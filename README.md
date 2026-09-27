@@ -27,3 +27,9 @@ pip install -e .
 The editable installation allows changes made to the source code to be immediately reflected without reinstalling the package.
 
 ---
+
+# Download the HGNC data
+
+```bash
+curl -L "https://storage.googleapis.com/public-download-files/hgnc/tsv/tsv/hgnc_complete_set.txt" -o data/hgnc_complete_set.txt
+```
