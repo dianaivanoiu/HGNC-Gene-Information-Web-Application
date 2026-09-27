@@ -104,10 +104,15 @@ def create_app() -> Flask:
             # -------------------------------------------------------
             data: List[Dict[str, str]] = app.config["DATA"]
 
+            input_format_is_ID = gene.startswith("HGNC:")
+
             selection: Optional[Dict[str, str]] = None
             for entry in data:
-                if entry.get("symbol") == gene:
-                    logger.info(f"Match found for gene: {gene}")
+                if input_format_is_ID and entry.get("hgnc_id") == gene:
+                    logger.info(f"Match ID found for gene: {gene}")
+                    selection = entry
+                elif entry.get("symbol") == gene:
+                    logger.info(f"Match symbol found for gene: {gene}")
                     selection = entry
 
             if selection is None:
