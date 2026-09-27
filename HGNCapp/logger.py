@@ -93,7 +93,7 @@ TEACHING TAKEAWAY
 
 import logging.config
 
-from settings import LOGGING_CONFIG
+from HGNCapp.settings import LOGGING_CONFIG
 
 
 # --------------------------------------------------

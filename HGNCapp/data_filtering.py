@@ -4,7 +4,8 @@ import csv
 import json
 from pathlib import Path
 from typing import List, Dict, Optional
-from logger import setup_logging
+
+from HGNCapp.logger import setup_logging
 
 logger = logging.getLogger(__name__)
 
@@ -64,9 +65,14 @@ def read_file(filename: Path) -> List[Dict[str, str]]:
                 else:
                     logger.warning(f"Column {column} not available in dataset")
 
-            for row in reader:
-                print(row)
+            if not available_columns:
+                raise ValueError("No HGNC columns found for this gene")
 
+            for row in reader:
+                if None in row or any(value is None for value in row.values()):
+                    continue
+
+                print(row)
                 lightweight_row = {}
                 for column in available_columns:
                     if column in row:
