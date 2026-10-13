@@ -37,7 +37,7 @@ def create_app() -> Flask:
     logger.info("Initialising Flask application via factory")
 
     # ---------------------------------------------------------------
-    # Load data (now happens ONCE when app is created)
+    # Load data (happens ONCE when app is created)
     # ---------------------------------------------------------------
     DATA_FILE = settings.DATA_FILE
 
