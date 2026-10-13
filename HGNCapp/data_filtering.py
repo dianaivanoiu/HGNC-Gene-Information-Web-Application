@@ -3,23 +3,24 @@ import logging
 import csv
 import json
 from pathlib import Path
-from typing import List, Dict, Optional
+from typing import List, Dict
 
+from HGNCapp import settings
 from HGNCapp.logger import setup_logging
 
 logger = logging.getLogger(__name__)
 
 def read_file(filename: Path) -> List[Dict[str, str]]:
     """
-    Read a gnomAD constraint file into a structured list of dictionaries.
+    Read the HGNC complete dataset into a structured list of dictionaries.
 
     Each line in the input file is parsed into a dictionary with fields:
-    gene, transcript, mis_z, and loeuf.
+    HGNC id, symbol, name, previous symbol, previous name, alias symbol, MANE select, MANE plus clinical.
 
     Parameters
     ----------
     filename : Path
-        Path to the input CSV file.
+        Path to the input TSV file.
 
     Returns
     -------
@@ -28,10 +29,15 @@ def read_file(filename: Path) -> List[Dict[str, str]]:
 
     Raises
     ------
-    IOError
+    FileNotFoundError
+        If the input file does not exist.
+
+    OSError
         If the file cannot be opened or read.
+
     ValueError
-        If parsing fails for all lines.
+        If the file is empty, lacks a header, contains no recognised
+        HGNC columns, or contains no valid data rows.
     """
     logger.info(f"Reading data file: {filename}")
 
@@ -56,7 +62,6 @@ def read_file(filename: Path) -> List[Dict[str, str]]:
                 raise ValueError("The .tsv file is empty or has no header line")
 
             logger.debug(f"Dataset contains {len(reader.fieldnames)} columns")
-            print(reader.fieldnames)
 
             available_columns = []
             for column in required_columns:
@@ -72,7 +77,6 @@ def read_file(filename: Path) -> List[Dict[str, str]]:
                 if None in row or any(value is None for value in row.values()):
                     continue
 
-                print(row)
                 lightweight_row = {}
                 for column in available_columns:
                     if column in row:
@@ -91,6 +95,7 @@ def read_file(filename: Path) -> List[Dict[str, str]]:
         raise
 
 def write_json(data, output_path):
+    """Write list of dictionaries to JSON file"""
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     with open(output_path, "w", encoding="utf-8") as file:
@@ -100,10 +105,11 @@ if __name__ == '__main__':
     setup_logging()
     logger.debug(f"Entry function")
 
-    dataset = Path("/Users/diana/PycharmProjects/HGNC-Gene-Information-Web-Application/data/hgnc_test_set.txt")
+    dataset = Path(settings.SOURCE_FILE)
 
     lightweight_dataset = read_file(dataset)
 
-    write_json(dataset.parent / "lightweight_dataset.json")
+    write_json(lightweight_dataset,
+               dataset.parent / "lightweight_dataset.json")
 
     sys.exit(0)
