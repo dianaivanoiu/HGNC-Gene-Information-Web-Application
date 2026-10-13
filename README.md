@@ -39,7 +39,7 @@ pip install -e .
 ## Download the HGNC data
 
 ```bash
-curl -L "https://storage.googleapis.com/public-download-files/hgnc/tsv/tsv/hgnc_complete_set.txt" -o data/hgnc_complete_set.txt
+curl --create-dirs -L "https://storage.googleapis.com/public-download-files/hgnc/tsv/tsv/hgnc_complete_set.txt" -o data/hgnc_complete_set.txt
 ```
 
 The source dataset is maintained by HGNC and may be updated over time
@@ -64,9 +64,9 @@ Run Flask:
 ```bash
 python -m HGNCapp.app
 ```
-Open the link shown by Flask in a web browser
+Open the link shown by Flask in a web browser (e.g., `http://127.0.0.1:5000`)
 
-The application can be run by searching by gene symbol (e.g.,`BRCA1`) or HGNC ID (e.g.,`HGNC:1101`)
+The application can be run by searching by gene symbol (e.g.,`BRCA1`) or HGNC ID (e.g.,`HGNC:1100`)
 
 When you are done, use Ctrl+C to stop the server
 
@@ -83,4 +83,4 @@ python -m pytest
 ```bash
 pytest --cov=. --cov-report=term-missing --cov-report=html
 ```
-The report is created in htmlcov/index.html
+The report is created in `htmlcov/index.html`
