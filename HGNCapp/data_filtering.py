@@ -90,6 +90,12 @@ def read_file(filename: Path) -> List[Dict[str, str]]:
         logger.exception("Error reading input file")
         raise
 
+def write_json(data, output_path):
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    with open(output_path, "w", encoding="utf-8") as file:
+        json.dump(data, file, indent=2, ensure_ascii=False)
+
 if __name__ == '__main__':
     setup_logging()
     logger.debug(f"Entry function")
@@ -98,13 +104,6 @@ if __name__ == '__main__':
 
     lightweight_dataset = read_file(dataset)
 
-    output_path = dataset.parent / "lightweight_dataset.json"
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(output_path, "w", encoding="utf-8") as file:
-        json.dump(
-            lightweight_dataset,
-            file,
-            indent=2,
-            ensure_ascii=False,
-        )
+    write_json(dataset.parent / "lightweight_dataset.json")
+
     sys.exit(0)

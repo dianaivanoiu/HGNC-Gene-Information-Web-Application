@@ -1,11 +1,12 @@
 import pytest
+import json
 from pathlib import Path
 from typing import List, Dict
 
 from HGNCapp import data_filtering
 
 # ------------------------------------------------------------------
-# read_file tests
+# data_filtering tests
 # ------------------------------------------------------------------
 
 def test_read_file_happy(tmp_path: Path) -> None:
@@ -43,6 +44,18 @@ def test_read_file_skips_invalid_lines(tmp_path: Path) -> None:
 def test_read_file_all_invalid(tmp_path: Path) -> None:
     """All invalid lines should raise ValueError."""
     file = tmp_path / "test.tsv"
+    file.write_text(
+        "hgnc_id\tHEADER2\tHEADER3\tHEADER4\n"
+        "BADLINE\nBADLINE2\n"
+    )
+
+    with pytest.raises(ValueError):
+        data_filtering.read_file(file)
+
+
+def test_read_file_all_invalid_no_header(tmp_path: Path) -> None:
+    """All invalid lines should raise ValueError."""
+    file = tmp_path / "test.tsv"
     file.write_text("BADLINE\nBADLINE2\n")
 
     with pytest.raises(ValueError):
@@ -55,3 +68,30 @@ def test_read_file_missing_file(tmp_path: Path) -> None:
 
     with pytest.raises(Exception):
         data_filtering.read_file(file)
+
+def test_read_file_empty(tmp_path: Path) -> None:
+    """Empty-file should return ValueError"""
+    file = tmp_path / "empty.tsv"
+    file.write_text("")
+
+    with pytest.raises(ValueError):
+        data_filtering.read_file(file)
+
+def test_write_json(tmp_path: Path) ->None:
+    """Directory is created and data is written correctly"""
+    output_file = tmp_path / "output" / "lightweight.json"
+    data = [
+        {
+            "hgnc_id": "GENE1",
+            "HEADER2": "TX1"
+        }
+    ]
+
+    data_filtering.write_json(data, output_file)
+
+    assert output_file.exists()
+
+    with output_file.open(encoding="utf-8") as file:
+        saved_data = json.load(file)
+
+    assert saved_data == data
