@@ -19,9 +19,6 @@ version = "0.0.1"
 # Short description of what your package does
 description = "Web application that displays HGNC gene information"
 
-# License file included in the project
-#license = {file = "LICENSE.txt"}
-
 # Authors of the package
 authors = [{name = "Diana Ivanoiu"}]
 
@@ -101,7 +98,7 @@ include = ["HGNCapp*"]
 # Do not remove or externalise these resources unless deployment
 # infrastructure explicitly guarantees correct resolution.
 [tool.setuptools.package-data]
-GnomadConstraint = [
+HGNCapp = [
     "templates/*",
     "static/*"
 ]
@@ -119,53 +116,3 @@ requires = ["setuptools>=45", "setuptools_scm[toml]>=6.2", "wheel"]
 
 # The tool used to build your package
 build-backend = "setuptools.build_meta"
-
-# ==========================================================
-# Development notes
-# ==========================================================
-#
-# Typical development workflow:
-#
-#     conda activate GnomadConstraint
-#
-#     pip install -e .
-#
-# The editable installation allows changes to the source code to be
-# reflected immediately without reinstalling the package.
-#
-# If requirements.txt is modified, rerun:
-#
-#     pip install -e .
-#
-# ----------------------------------------------------------
-# Useful development commands
-# ----------------------------------------------------------
-#
-# Run the Flask application:
-#
-#     python -m GnomadConstraint.app
-#
-# Execute the complete unit and UI test suite:
-#
-#     pytest
-#
-# Execute the complete test suite with coverage:
-#
-#     pytest \
-#         --cov=GnomadConstraint \
-#         --cov-report=term-missing:skip-covered \
-#         --cov-report=html \
-#         --cov-report=xml
-#
-# HTML coverage report:
-#
-#     htmlcov/index.html
-#
-# ----------------------------------------------------------
-# Dependencies
-# ----------------------------------------------------------
-#
-# All project dependencies, including testing libraries such as
-# pytest and pytest-cov, are maintained in requirements.txt. This
-# avoids duplication and ensures there is a single source of truth
-# for the project's software environment.

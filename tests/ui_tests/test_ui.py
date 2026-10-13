@@ -1,5 +1,4 @@
 import pytest
-import json
 from pathlib import Path
 
 from HGNCapp import app
@@ -18,9 +17,12 @@ def test_create_app_data_file_error(tmp_path, monkeypatch):
         app.create_app()
 
 @pytest.fixture
-def client(tmp_path: Path, monkeypatch):
+def client(tmp_path: Path):
     """Create a Flask test client for the application"""
-    test_data = [
+    application = app.create_app()
+    application.config["TESTING"] = True
+
+    application.config["DATA"] = [
         {
             "hgnc_id": "HGNC:1",
             "symbol": "BRCA1",
@@ -31,14 +33,6 @@ def client(tmp_path: Path, monkeypatch):
             "mane_select": "",
         }
     ]
-
-    data_file = tmp_path / "test_data.json"
-    data_file.write_text(json.dumps(test_data))
-
-    monkeypatch.setattr(settings, "DATA_FILE", data_file)
-
-    application = app.create_app()
-    application.config["TESTING"] = True
 
     with application.test_client() as test_client:
         yield test_client

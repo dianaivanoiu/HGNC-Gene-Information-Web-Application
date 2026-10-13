@@ -1,12 +1,11 @@
 import json
+import logging
 
 from flask import Flask, request, render_template
 from pathlib import Path
-import logging
-from typing import Dict, Any, Optional, List
+from typing import Dict, Optional, List
 
 from HGNCapp import settings
-#from GnomadConstraint.models import model
 from HGNCapp.logger import setup_logging
 
 
@@ -14,19 +13,9 @@ from HGNCapp.logger import setup_logging
 # Application Factory
 # -------------------------------------------------------------------
 def create_app() -> Flask:
-    """
-    Create and configure the Flask application.
+    """Create and configure the Flask application"""
 
-    This function encapsulates application creation to avoid
-    global side-effects and allow flexible configuration.
-
-    Returns
-    -------
-    Flask
-        Configured Flask application instance.
-    """
-
-    # Create Flask instance (NOT at import time anymore)
+    # Create Flask instance
     app: Flask = Flask(__name__)
 
     # ---------------------------------------------------------------
@@ -45,7 +34,7 @@ def create_app() -> Flask:
 
     try:
         # Store data inside app config to avoid global state
-        # ✅ This is important for testing and flexibility
+        # This is important for testing and flexibility
         with Path(DATA_FILE).open("r", encoding="utf-8") as file:
             app.config["DATA"] = json.load(file)
             logger.info("Data loaded successfully")
@@ -62,11 +51,6 @@ def create_app() -> Flask:
     def home() -> str:
         """
         Render the homepage.
-
-        Returns
-        -------
-        str
-            Rendered HTML template.
         """
         logger.debug("Rendering homepage")
         return render_template("index.html")
@@ -75,14 +59,6 @@ def create_app() -> Flask:
     def search() -> str:
         """
         Handle gene search requests.
-
-        This endpoint retrieves a gene name from form input
-        and queries the dataset loaded at application creation.
-
-        Returns
-        -------
-        str
-            Rendered template containing results or error messages.
         """
         try:
             gene: str = request.form.get("gene", "").strip()
@@ -100,21 +76,26 @@ def create_app() -> Flask:
                 )
 
             # -------------------------------------------------------
-            # Retrieve data from app config (NOT global variable)
+            # Retrieve data from app config
             # -------------------------------------------------------
             data: List[Dict[str, str]] = app.config["DATA"]
 
-            input_format_is_ID = gene.startswith("HGNC:")
+            input_format_is_id = gene.startswith("HGNC:")
 
             selection: Optional[Dict[str, str]] = None
             for entry in data:
-                if input_format_is_ID and entry.get("hgnc_id") == gene:
+                if input_format_is_id and entry.get("hgnc_id") == gene:
+                    # Search by HGNC ID
                     logger.info(f"Match ID found for gene: {gene}")
                     selection = entry
                 elif entry.get("symbol") == gene:
+                    # Search by gene symbol
                     logger.info(f"Match symbol found for gene: {gene}")
                     selection = entry
 
+            # -------------------------------------------------------
+            # Gene not found
+            # -------------------------------------------------------
             if selection is None:
                 logger.info(f"Gene not found: {gene}")
                 return render_template(
@@ -123,6 +104,9 @@ def create_app() -> Flask:
                     output_text_2=""
                 )
 
+            # -------------------------------------------------------
+            # Gene found
+            # -------------------------------------------------------
             logger.info(f"Gene found: {gene}")
 
             output_text_1: str = f"Found gene:"
@@ -162,7 +146,7 @@ def create_app() -> Flask:
 
 
 # -------------------------------------------------------------------
-# Application instance (for mounting to gunicorn or mod_wsgi)
+# Application instance
 # -------------------------------------------------------------------
 app: Flask = create_app()
 
