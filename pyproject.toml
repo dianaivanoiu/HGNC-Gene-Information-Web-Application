@@ -14,7 +14,7 @@ dynamic = ["dependencies"]
 # Static version number (simple)
 # You manually update this as you release new versions
 # We can make versioning dynamic
-version = "0.0.1"
+version = "1.0.0"
 
 # Short description of what your package does
 description = "Web application that displays HGNC gene information"
