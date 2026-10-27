@@ -21,6 +21,14 @@ jobs:
       - name: Install project
         run: python -m pip install -e .
 
+      - name: Download HGNC dataset
+        run: |
+          mkdir -p data
+          curl -L "https://storage.googleapis.com/public-download-files/hgnc/tsv/tsv/hgnc_complete_set.txt" -o data/hgnc_complete_set.txt
+
+      - name: Generate lightweight dataset
+        run: python -m HGNCapp.data_filtering
+
       - name: Run tests with coverage
         run: python -m pytest --cov=HGNCapp --cov-report=term-missing --cov-report=xml
 
@@ -28,8 +36,6 @@ jobs:
         uses: codecov/codecov-action@v5
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
-
 
 
 
