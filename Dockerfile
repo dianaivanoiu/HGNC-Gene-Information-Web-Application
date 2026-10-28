@@ -4,6 +4,7 @@ ENV PYTHONUNBUFFERED=1
 
 COPY pyproject.toml requirements.txt ./
 COPY HGNCapp ./HGNCapp
+COPY tests ./tests
 
 RUN python -m pip install --upgrade pip
 RUN python -m pip install --no-cache-dir .
